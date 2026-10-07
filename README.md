@@ -25,9 +25,9 @@
 
 Это статический сайт без сервера и без сборки: HTML, CSS и ES-модули.
 
-- Сеть: WebRTC через [PeerJS](https://peerjs.com/). Браузер ведущего хранит всё состояние игры, а публичный сигнальный сервер PeerJS нужен только чтобы игроки нашли ведущего по PIN.
+- Сеть: сообщения идут через публичный MQTT-брокер по защищённому WebSocket (broker.emqx.io, запасные — HiveMQ и Mosquitto). Это работает из любой сети, в том числе с мобильного интернета. Браузер ведущего хранит всё состояние игры, первая цифра PIN — номер брокера.
 - Квизы хранятся в `localStorage` браузера ведущего.
-- Библиотеки лежат в `vendor/` (PeerJS — MIT, qrcode-generator — MIT, canvas-confetti — ISC).
+- Библиотеки лежат в `vendor/` (MQTT.js — MIT, qrcode-generator — MIT, canvas-confetti — ISC).
 
 ```
 index.html
@@ -37,7 +37,7 @@ js/library.js   — список квизов
 js/editor.js    — редактор
 js/host.js      — игра на экране ведущего
 js/player.js    — игра на телефоне
-js/net.js       — PeerJS
+js/net.js       — связь через MQTT
 js/audio.js     — синтез музыки и эффектов
 js/store.js     — хранение квизов
 js/samples.js   — готовые квизы
@@ -49,8 +49,8 @@ js/samples.js   — готовые квизы
 npx http-server . -p 8080
 ```
 
-Для отладки без интернета можно поднять свой PeerServer (`npx peer --port 9000`) и открыть
-`http://localhost:8080/?peerhost=localhost&peerport=9000`.
+Для отладки без интернета можно поднять свой MQTT-брокер с WebSocket (например, Mosquitto или aedes) и открыть
+`http://localhost:8080/?mqtt=ws://localhost:8888`.
 
 ## Публикация
 
